@@ -6,6 +6,8 @@ import sqlite3
 
 class Program:
 
+    db_name = 'database.db'
+
     def __init__(self, window):
         self.wind = window
         self.wind.title("Balance")
@@ -66,7 +68,30 @@ class Program:
         b1 = Button(frame, text='Guardar', command=self.balance).grid(row=6, column=1, sticky=W+E)
 
 
+    def run_query(self, query, parameters = ()):
+            with sqlite3.connect(self.db_name) as conn:
+                cursor = conn.cursor()
+                result = cursor.execute(query, parameters)
+                conn.commit()
+            return result
+
+
+    def get_products(self):
+            # cleaning table
+            records = self.tree.get_children()
+            for element in records:
+                self.tree.delete(element)
+            # quering data
+            query = 'SELECT * FROM balance ORDER BY id ASC'
+            db_rows = self.run_query(query)
+            # filling data
+            db_rows = list(db_rows)
+            for row in db_rows:
+                self.tree.insert('', 1, text = row[1], values = row[2])
+
+
     def balance(self):
+        
         # Ventana de balance
         self.balance_wind = Toplevel()
         self.balance_wind.title('Balance de 8 columnas')
@@ -100,7 +125,7 @@ class Program:
         self.tree.column('#8', minwidth=100, width = 100, stretch=NO)
         self.tree.column('#9', minwidth=100, width = 100, stretch=NO)
         self.tree.column('#10', minwidth=100, width = 100, stretch=NO)
-
+        self.get_products()
 
 if __name__ == "__main__":
     window = Tk()
