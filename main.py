@@ -23,17 +23,18 @@ class Program:
 
 
         # ListsBoxs
-        self.listbox1 = Listbox(frame)
+        self.listbox1 = Listbox(frame, width=35, height=28)
         activos = ['Caja', 'Banco', 'Valores a depositar','Moneda extranjera',"Fondo fijo", "Titulos y acciones", "Deudores varios","Deudores por venta","Deudores morosos","Deudores en litigio","Documentos a cobrar", "Concepto pagado poadelantado", "Hipotecas a cobrar","Anticipios proveedores", "Accionistas", "Mercaderias", "Materias primas", "Productos en proceso de elaboracion","Productos terminados", "Rodados", "Instalaciones", "Muebles y utiles", "Inmuebles", "Maquinarias", "Llave de negocio", "Marcas y patentes", "Derechos de autor", "Gastos de organizacion"]
         self.listbox1.insert(0, *activos)
         self.listbox1.grid(row=3, column=0)
+        
 
-        self.listbox2 = Listbox(frame)
+        self.listbox2 = Listbox(frame, width=35, height=28)
         pasivos = ["Proveedores", "Acreedores varios", "Documentos a pagar", "Intereses a pagar", "Obligaciones negociables", "Prestamos a pagar", "Acreedores prendarios e hipotecarios", "Adelantos en cuenta corriente", "Honorarios a pagar", "Sueldos a pagar", "Anses a pagar", "Retencion impuesto a las ganancias", "Retencion IVA", "Dividendos", "Concepto cobrado por adelantado", "Anticipo de clientes", "Cuentas por pagar", "Previsiones"]
         self.listbox2.insert(0, *pasivos)
         self.listbox2.grid(row=3, column=1)
 
-        self.listbox3 = Listbox(frame)
+        self.listbox3 = Listbox(frame, width=35, height=28)
         resultados = ['Gastos Luz','Descuento obtenido','Descuento otorgado','Interes otorgado','Interes obtenido', 'Ventas','CMV', 'Alquileres cobrados', 'Comision Cobrada', 'Impuestos', 'Alquileres pagados', 'Sueldos y jornales', 'Gastos generales', 'Comisiones pagadas', 'Publicidad', 'Seguros']
         self.listbox3.insert(0, *resultados)
         self.listbox3.grid(row=3, column=2)
