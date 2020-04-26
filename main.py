@@ -10,6 +10,16 @@ class Program:
         self.wind = window
         self.wind.title("Balance")
         
+        
+        # Menubar
+        menubar = Menu(self.wind)
+        self.wind.config(menu=menubar)
+        filemenu = Menu(menubar, tearoff=0)
+        menubar.add_cascade(label='Opciones', menu=filemenu)
+        filemenu.add_command(label='Balance', command=self.balance)
+        filemenu.add_separator()
+        filemenu.add_command(label='Salir', command = self.wind.quit)
+
 
         # Frame
         frame = LabelFrame(self.wind, text='Balance')
