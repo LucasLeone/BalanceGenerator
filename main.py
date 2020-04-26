@@ -65,7 +65,7 @@ class Program:
 
 
         # Button Save
-        b1 = Button(frame, text='Guardar', command=self.balance).grid(row=6, column=1, sticky=W+E)
+        b1 = Button(frame, text='Guardar', command=self.add_product).grid(row=6, column=1, sticky=W+E)
 
 
     def run_query(self, query, parameters = ()):
@@ -81,17 +81,15 @@ class Program:
             records = self.tree.get_children()
             for element in records:
                 self.tree.delete(element)
-            # quering data
-            query = 'SELECT * FROM balance ORDER BY id ASC'
+            # Query
+            query = 'SELECT * FROM balance ORDER BY id DESC'
             db_rows = self.run_query(query)
-            # filling data
-            db_rows = list(db_rows)
+            # Llenando la tabla
             for row in db_rows:
-                self.tree.insert('', 1, text = row[1], values = row[2])
+                self.tree.insert('', 0, text = row[0], values = row[0:10])
 
 
     def balance(self):
-        
         # Ventana de balance
         self.balance_wind = Toplevel()
         self.balance_wind.title('Balance de 8 columnas')
@@ -126,6 +124,36 @@ class Program:
         self.tree.column('#9', minwidth=100, width = 100, stretch=NO)
         self.tree.column('#10', minwidth=100, width = 100, stretch=NO)
         self.get_products()
+
+
+    def validation(self):
+        return len(self.price_debe.get()) == None and len(self.price_haber.get()) == None
+
+
+    def add_product(self):
+        if self.validation():
+            print('No hay importes')
+        else:
+            if (rows:= self.listbox1.selection_get() or self.listbox2.selection_get()):
+                query = 'INSERT INTO balance (cuenta, debe, haber) VALUES (?, ?, ?)'
+                parameters = (rows, self.price_debe.get(), self.price_haber.get())
+                self.run_query(query, parameters)
+                self.price_debe.delete(0, END)
+                self.price_haber.delete(0, END)
+                print("Se agrego")
+            elif (rows:= self.listbox3.selection_get()):
+                query = 'INSERT INTO balance (cuenta, debe, haber) VALUES (?, ?, ?)'
+                parameters = (rows, self.price_debe.get(), self.price_haber.get())
+                self.run_query(query, parameters)
+                self.price_debe.delete(0, END)
+                self.price_haber.delete(0, END)
+                print("Se agrego un resultado")
+            else:
+                print("No hay ningun rubro seleccionado")
+        
+
+
+
 
 if __name__ == "__main__":
     window = Tk()
