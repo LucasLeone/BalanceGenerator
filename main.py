@@ -66,6 +66,7 @@ class Program:
             self.balance_wind, height=10, columns=[f"#{n}" for n in range(1, 11)]
         )
         self.tree.config(show='headings')
+        
         self.tree.grid(row=0, column=0)
         self.tree.heading('#1', text='Numero', anchor=CENTER)
         self.tree.heading('#2', text='Cuenta', anchor=CENTER)
@@ -78,6 +79,16 @@ class Program:
         self.tree.heading('#9', text='Positivo', anchor=CENTER)
         self.tree.heading('#10', text='Negativo', anchor=CENTER)
 
+        self.tree.column('#1', minwidth=55, width = 55, stretch=NO)
+        self.tree.column('#2', minwidth=150, width = 150, stretch=NO)
+        self.tree.column('#3', minwidth=100, width = 100, stretch=NO)
+        self.tree.column('#4', minwidth=100, width = 100, stretch=NO)
+        self.tree.column('#5', minwidth=100, width = 100, stretch=NO)
+        self.tree.column('#6', minwidth=100, width = 100, stretch=NO)
+        self.tree.column('#7', minwidth=100, width = 100, stretch=NO)
+        self.tree.column('#8', minwidth=100, width = 100, stretch=NO)
+        self.tree.column('#9', minwidth=100, width = 100, stretch=NO)
+        self.tree.column('#10', minwidth=100, width = 100, stretch=NO)
 
 
 if __name__ == "__main__":
