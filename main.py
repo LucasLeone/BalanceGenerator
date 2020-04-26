@@ -54,18 +54,27 @@ class Program:
 
         # Input Importes
         Label(frame, text="Importes").grid(row=4, column=1)
-        Label(frame, text='Debe').grid(row=5, column=0)
-        Label(frame, text='Haber').grid(row=5, column=2)
+        Label(frame, text='Debe').grid(row=7, column=0)
+        self.mesagge = Label(frame, text='', fg='red')
+        self.mesagge.grid(row=6, column=1)
+        Label(frame, text='Haber').grid(row=7, column=2)
+        Label(frame, text='Nro cuenta').grid(row=7, column=1)
         
+
         self.price_debe = Entry(frame)
-        self.price_debe.grid(row=6, column=0)
+        self.price_debe.grid(row=8, column=0)
+        self.price_debe.insert(0, int(0))
 
         self.price_haber = Entry(frame)
-        self.price_haber.grid(row=6, column=2)
+        self.price_haber.grid(row=8, column=2)
+        self.price_haber.insert(0, int(0))
 
+        self.nro_cuenta = Entry(frame)
+        self.nro_cuenta.grid(row=8, column=1)
+        
 
         # Button Save
-        b1 = Button(frame, text='Guardar', command=self.add_product).grid(row=6, column=1, sticky=W+E)
+        b1 = Button(frame, text='Guardar', command=self.add_product).grid(row=9, column=1, sticky=W+E)
 
 
     def run_query(self, query, parameters = ()):
@@ -127,30 +136,23 @@ class Program:
 
 
     def validation(self):
-        return len(self.price_debe.get()) == None and len(self.price_haber.get()) == None
+        return len(self.price_debe.get()) == 0 and len(self.price_haber.get()) == 0 and len(self.nro_cuenta.get()) == 0
 
 
     def add_product(self):
-        if self.validation():
-            print('No hay importes')
-        else:
+        try:
             if (rows:= self.listbox1.selection_get() or self.listbox2.selection_get()):
-                query = 'INSERT INTO balance (cuenta, debe, haber) VALUES (?, ?, ?)'
-                parameters = (rows, self.price_debe.get(), self.price_haber.get())
+                query = 'INSERT INTO balance (id, cuenta, debe, haber) VALUES (?, ?, ?, ?)'
+                parameters = (self.nro_cuenta.get(), rows, self.price_debe.get(), self.price_haber.get())
                 self.run_query(query, parameters)
                 self.price_debe.delete(0, END)
                 self.price_haber.delete(0, END)
-                print("Se agrego")
-            elif (rows:= self.listbox3.selection_get()):
-                query = 'INSERT INTO balance (cuenta, debe, haber) VALUES (?, ?, ?)'
-                parameters = (rows, self.price_debe.get(), self.price_haber.get())
-                self.run_query(query, parameters)
-                self.price_debe.delete(0, END)
-                self.price_haber.delete(0, END)
-                print("Se agrego un resultado")
+                self.nro_cuenta.delete(0, END)
+                self.mesagge['text'] = 'Se guardo con exito'
             else:
-                print("No hay ningun rubro seleccionado")
-        
+                self.mesagge['text'] = 'No hay rubro'
+        except (sqlite3.IntegrityError, TclError):
+            self.mesagge['text'] = 'No hay datos o ya esta cargado'
 
 
 
