@@ -1,0 +1,92 @@
+from tkinter import ttk
+from tkinter import *
+import sqlite3
+
+
+OPTIONS = ['A+', 'A-', 'P+', 'P-', 'R+', 'R-']
+
+class Program:
+
+    def __init__(self, window):
+        self.wind = window
+        self.wind.title("Balance")
+        
+
+        # Frame
+        frame = LabelFrame(self.wind, text='Balance')
+        frame.grid(row=0, column=0, columnspan=2, pady=30)
+
+
+        # Label de listas
+        l1 = Label(frame, text='Activos').grid(row=2, column=0)
+        l2 = Label(frame, text='Pasivos').grid(row=2, column=1)
+        l3 = Label(frame, text='Resultados').grid(row=2, column=2)
+
+
+        # ListsBoxs
+        self.listbox1 = Listbox(frame)
+        activos = ['Caja', 'Banco', 'Valores a depositar','Moneda extranjera',"Fondo fijo", "Titulos y acciones", "Deudores varios","Deudores por venta","Deudores morosos","Deudores en litigio","Documentos a cobrar", "Concepto pagado poadelantado", "Hipotecas a cobrar","Anticipios proveedores", "Accionistas", "Mercaderias", "Materias primas", "Productos en proceso de elaboracion","Productos terminados", "Rodados", "Instalaciones", "Muebles y utiles", "Inmuebles", "Maquinarias", "Llave de negocio", "Marcas y patentes", "Derechos de autor", "Gastos de organizacion"]
+        self.listbox1.insert(0, *activos)
+        self.listbox1.grid(row=3, column=0)
+
+        self.listbox2 = Listbox(frame)
+        pasivos = ["Proveedores", "Acreedores varios", "Documentos a pagar", "Intereses a pagar", "Obligaciones negociables", "Prestamos a pagar", "Acreedores prendarios e hipotecarios", "Adelantos en cuenta corriente", "Honorarios a pagar", "Sueldos a pagar", "Anses a pagar", "Retencion impuesto a las ganancias", "Retencion IVA", "Dividendos", "Concepto cobrado por adelantado", "Anticipo de clientes", "Cuentas por pagar", "Previsiones"]
+        self.listbox2.insert(0, *pasivos)
+        self.listbox2.grid(row=3, column=1)
+
+        self.listbox3 = Listbox(frame)
+        resultados = ['Gastos Luz','Descuento obtenido','Descuento otorgado','Interes otorgado','Interes obtenido', 'Ventas','CMV', 'Alquileres cobrados', 'Comision Cobrada', 'Impuestos', 'Alquileres pagados', 'Sueldos y jornales', 'Gastos generales', 'Comisiones pagadas', 'Publicidad', 'Seguros']
+        self.listbox3.insert(0, *resultados)
+        self.listbox3.grid(row=3, column=2)
+        
+
+        # Input Importes
+        Label(frame, text="Importes").grid(row=4, column=1)
+        Label(frame, text='Debe').grid(row=5, column=0)
+        Label(frame, text='Haber').grid(row=5, column=2)
+        
+        self.price_debe = Entry(frame)
+        self.price_debe.grid(row=6, column=0)
+
+        self.price_haber = Entry(frame)
+        self.price_haber.grid(row=6, column=2)
+
+
+        # Button Save
+        b1 = Button(frame, text='Guardar', command=self.balance).grid(row=6, column=1, sticky=W+E)
+
+
+    def balance(self):
+        # Ventana de balance
+        self.balance_wind = Toplevel()
+        self.balance_wind.title('Balance de 8 columnas')
+
+
+        # Table
+        self.tree = ttk.Treeview(
+            self.balance_wind, height=10, columns=[f"#{n}" for n in range(1, 11)]
+        )
+        self.tree.config(show='headings')
+        self.tree.grid(row=0, column=0)
+        self.tree.heading('#1', text='Numero', anchor=CENTER)
+        self.tree.heading('#2', text='Cuenta', anchor=CENTER)
+        self.tree.heading('#3', text='Debe', anchor=CENTER)
+        self.tree.heading('#4', text='Haber', anchor=CENTER)
+        self.tree.heading('#5', text='Deudor', anchor=CENTER)
+        self.tree.heading('#6', text='Acreedor', anchor=CENTER)
+        self.tree.heading('#7', text='Activo', anchor=CENTER)
+        self.tree.heading('#8', text='Pasivo', anchor=CENTER)
+        self.tree.heading('#9', text='Positivo', anchor=CENTER)
+        self.tree.heading('#10', text='Negativo', anchor=CENTER)
+
+
+
+if __name__ == "__main__":
+    window = Tk()
+    Program(window)
+    window.mainloop()
+
+
+
+
+    
