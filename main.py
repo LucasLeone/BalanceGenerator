@@ -3,7 +3,6 @@ from tkinter import *
 import sqlite3
 
 
-OPTIONS = ['A+', 'A-', 'P+', 'P-', 'R+', 'R-']
 
 class Program:
 
