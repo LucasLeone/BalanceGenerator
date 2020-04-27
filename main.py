@@ -123,7 +123,7 @@ class Program:
         self.tree.heading('#10', text='Negativo', anchor=CENTER)
 
         self.tree.column('#1', minwidth=55, width = 55, stretch=NO)
-        self.tree.column('#2', minwidth=150, width = 150, stretch=NO)
+        self.tree.column('#2', minwidth=205, width = 205, stretch=NO)
         self.tree.column('#3', minwidth=100, width = 100, stretch=NO)
         self.tree.column('#4', minwidth=100, width = 100, stretch=NO)
         self.tree.column('#5', minwidth=100, width = 100, stretch=NO)
@@ -146,9 +146,19 @@ class Program:
                 parameters = (self.nro_cuenta.get(), rows, self.price_debe.get(), self.price_haber.get())
                 self.run_query(query, parameters)
                 self.price_debe.delete(0, END)
+                self.price_debe.insert(0, int(0))
                 self.price_haber.delete(0, END)
+                self.price_haber.insert(0, int(0))
                 self.nro_cuenta.delete(0, END)
                 self.mesagge['text'] = 'Se guardo con exito'
+            elif (rows:= self.listbox3.selection_get()):
+                query = 'INSERT INTO balance (id, cuenta, debe, haber) VALUES (?, ?, ?, ?)'
+                parameters = (self.nro_cuenta.get(), rows, self.price_debe.get(), self.price_haber.get())
+                self.run_query(query, parameters)
+                self.price_debe.delete(0, END)
+                self.price_haber(0, END)
+                self.nro_cuenta.delete(0, END)
+                self.mesagge['text'] = 'Resultado de ejercicio guardado'
             else:
                 self.mesagge['text'] = 'No hay rubro'
         except (sqlite3.IntegrityError, TclError):
