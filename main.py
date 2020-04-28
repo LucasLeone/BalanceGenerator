@@ -106,7 +106,7 @@ class Program:
 
         # Table
         self.tree = ttk.Treeview(
-            self.balance_wind, height=10, columns=[f"#{n}" for n in range(1, 11)]
+            self.balance_wind, height=20, columns=[f"#{n}" for n in range(1, 11)]
         )
         self.tree.config(show='headings')
         
@@ -133,6 +133,10 @@ class Program:
         self.tree.column('#9', minwidth=100, width = 100, stretch=NO)
         self.tree.column('#10', minwidth=100, width = 100, stretch=NO)
         self.get_products()
+
+        # Botones
+        ttk.Button(self.balance_wind, text='Eliminar', command = self.delete_product).grid(row=1, column=0, sticky=W+E)
+        ttk.Button(self.balance_wind, text='Editar', command = self.edit_product).grid(row=2, column=0, sticky=W+E)
 
 
     def validation(self):
@@ -165,14 +169,69 @@ class Program:
             self.mesagge['text'] = 'No hay datos o ya esta cargado'
 
 
+    def delete_product(self):
+        if (rows:= self.tree.selection()):
+            name = self.tree.item(rows)['text']
+            self.mesagge['text'] = ''
+            query = 'DELETE FROM balance WHERE id = ?'
+            self.run_query(query, (name, ))
+            self.mesagge['text'] = 'El importe fue eliminado'
+            self.get_products()
+        else:
+            self.mesagge['text'] = 'Selecciona un importe'
+
+    
+    def edit_product(self):
+        self.mesagge['text'] = ''
+        if (rows:= self.tree.selection()):
+            old_debe = self.tree.item(rows)['values'][2]
+            old_haber = self.tree.item(rows)['values'][3]
+            id_cuenta = self.tree.item(rows)['text']
+            cuenta = self.tree.item(rows)['values'][1]
+            self.edit_wind = Toplevel()
+            self.edit_wind.title("Editar importe")
+
+            # Labels
+            Label(self.edit_wind, text='Debe').grid(row=0, column=2)
+            Label(self.edit_wind, text='Haber').grid(row=0, column=3)
+
+            # Old Importes
+            Label(self.edit_wind, text = 'Importes actual').grid(row=1, column=1)
+            Entry(self.edit_wind, textvariable= StringVar(self.edit_wind, value = old_debe), state='readonly').grid(row=1, column=2)
+            Entry(self.edit_wind, textvariable= StringVar(self.edit_wind, value = old_haber), state='readonly').grid(row=1,column=3)
+            
+            # New Importes
+            Label(self.edit_wind, text='Nuevos importes').grid(row=2, column=1)
+            new_debe = Entry(self.edit_wind)
+            new_debe.grid(row=2, column=2)
+            new_haber = Entry(self.edit_wind)
+            new_haber.grid(row=2, column=3)
+            
+            # Button
+            Button(self.edit_wind, text='Actualizar', command = lambda: self.edit_records(id_cuenta, cuenta, new_debe.get(), new_haber.get())).grid(row=3, column=2, columnspan=2, sticky=W+E)
+        else:
+            self.mesagge['text'] = 'Selecciona un importe'
+
+
+    def edit_records(self, id_cuenta, cuenta, new_debe, new_haber):
+        query = 'DELETE FROM balance WHERE id = ?'
+        #query = 'UPDATE balance SET debe = ?, haber = ? WHERE id = ?'
+        parameters = (id_cuenta,)
+        self.run_query(query, parameters)
+        self.new_record(id_cuenta, cuenta, new_debe, new_haber)
+        self.edit_wind.destroy()
+        self.mesagge['text'] = "El importe fue actualizado"
+        self.get_products()
+
+
+    def new_record(self, id_cuenta, cuenta, new_debe, new_haber):
+        query = 'INSERT INTO balance (id, cuenta, debe, haber) VALUES (?, ?, ?, ?)'
+        parameters = (id_cuenta, cuenta, new_debe, new_haber)
+        self.run_query(query, parameters)
+
 
 
 if __name__ == "__main__":
     window = Tk()
     Program(window)
-    window.mainloop()
-
-
-
-
-    
+    window.mainloop() 
